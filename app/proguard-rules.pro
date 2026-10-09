@@ -1,0 +1,3 @@
+-keep class com.wyrix.wallpaper.model.** { *; }
+-dontwarn okhttp3.**
+-dontwarn retrofit2.**
