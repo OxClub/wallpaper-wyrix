@@ -1,4 +1,5 @@
--keep class com.wyrix.wallpaper.model.** { *; }
+-keep,allowobfuscation class com.wyrix.wallpaper.model.**
+-keepclassmembers class com.wyrix.wallpaper.model.** { <init>(...); <fields>; }
 -keepattributes Signature, *Annotation*
 -dontwarn okhttp3.**
 -dontwarn retrofit2.**

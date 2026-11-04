@@ -23,8 +23,8 @@ android {
         applicationId = "com.wyrix.wallpaper"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.0.4"
 
         buildConfigField("String", "PIXABAY_API_KEY", "\"$pixabayApiKey\"")
         // Real ad unit ID is only used in release builds. Debug builds use Google's
