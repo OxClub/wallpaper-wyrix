@@ -1,4 +1,4 @@
+-keep class com.wyrix.wallpaper.model.** { *; }
 -keepattributes Signature, *Annotation*
--keepclassmembers class com.wyrix.wallpaper.model.** { <fields>; }
 -dontwarn okhttp3.**
 -dontwarn retrofit2.**
