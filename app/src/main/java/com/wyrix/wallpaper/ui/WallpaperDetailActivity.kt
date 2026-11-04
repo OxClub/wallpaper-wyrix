@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.wyrix.wallpaper.R
@@ -35,6 +36,8 @@ class WallpaperDetailActivity : AppCompatActivity() {
 
         Glide.with(this)
             .load(imageUrl)
+            .downsample(DownsampleStrategy.AT_MOST)
+            .override(resources.displayMetrics.widthPixels * 2, resources.displayMetrics.heightPixels * 2)
             .into(binding.photoView)
         binding.detailProgress.visibility = android.view.View.GONE
 
@@ -57,6 +60,8 @@ class WallpaperDetailActivity : AppCompatActivity() {
     private fun setWallpaper(which: Int) {
         Glide.with(this)
             .asBitmap()
+            .downsample(DownsampleStrategy.AT_MOST)
+            .override(resources.displayMetrics.widthPixels, resources.displayMetrics.heightPixels)
             .load(imageUrl)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {

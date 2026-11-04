@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.wyrix.wallpaper.databinding.ItemWallpaperBinding
 import com.wyrix.wallpaper.model.PixabayImage
 
@@ -24,6 +26,8 @@ class WallpaperAdapter(
         val item = getItem(position)
         Glide.with(holder.binding.imageThumb)
             .load(item.webformatURL)
+            .format(DecodeFormat.PREFER_RGB_565)
+            .downsample(DownsampleStrategy.AT_MOST)
             .centerCrop()
             .into(holder.binding.imageThumb)
         holder.binding.root.setOnClickListener { onClick(item) }

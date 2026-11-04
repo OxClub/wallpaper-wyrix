@@ -23,8 +23,8 @@ android {
         applicationId = "com.wyrix.wallpaper"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         buildConfigField("String", "PIXABAY_API_KEY", "\"$pixabayApiKey\"")
         // Real ad unit ID is only used in release builds. Debug builds use Google's
@@ -50,6 +50,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
         }
