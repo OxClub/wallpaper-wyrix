@@ -17,12 +17,6 @@ val pixabayApiKey: String = (project.findProperty("PIXABAY_API_KEY") as String?)
 // Optional. Free key from https://www.pexels.com/api/ . Leave empty to skip Pexels.
 val pexelsApiKey: String = (project.findProperty("PEXELS_API_KEY") as String?)
     ?: (localProps.getProperty("pexels.api.key") ?: "")
-// Unity Ads. Get these from Unity Dashboard -> Monetization -> your project.
-// CI passes Gradle properties; local dev reads local.properties. Blank Game ID = ads disabled.
-val unityGameId: String = (project.findProperty("UNITY_GAME_ID") as String?)
-    ?: (localProps.getProperty("unity.game.id") ?: "800452515")
-val unityBannerId: String = (project.findProperty("UNITY_BANNER_ID") as String?)
-    ?: (localProps.getProperty("unity.banner.id") ?: "BP_Banner_Android")
 
 android {
     namespace = "com.wyrix.wallpaper"
@@ -37,8 +31,11 @@ android {
 
         buildConfigField("String", "PIXABAY_API_KEY", "\"$pixabayApiKey\"")
         buildConfigField("String", "PEXELS_API_KEY", "\"$pexelsApiKey\"")
-        buildConfigField("String", "UNITY_GAME_ID", "\"$unityGameId\"")
-        buildConfigField("String", "UNITY_BANNER_ID", "\"$unityBannerId\"")
+        // Real ad unit ID is only used in release builds. Debug builds use Google's
+        // official public test banner ID to avoid serving live ads / invalid traffic
+        // during development, per AdMob policy.
+        buildConfigField("String", "BANNER_AD_UNIT_ID_RELEASE", "\"ca-app-pub-5602764660213350/8645437775\"")
+        buildConfigField("String", "BANNER_AD_UNIT_ID_TEST", "\"ca-app-pub-3940256099942544/6300978111\"")
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -108,6 +105,6 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
-    // Ads (Unity Ads). Check https://docs.unity.com/ads for the latest 4.x version.
-    implementation("com.unity3d.ads:unity-ads:4.12.5")
+    // Ads
+    implementation("com.google.android.gms:play-services-ads:25.5.0")
 }

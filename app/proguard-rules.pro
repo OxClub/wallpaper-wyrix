@@ -4,6 +4,3 @@
 -dontwarn okhttp3.**
 -dontwarn retrofit2.**
 -keepattributes InnerClasses, EnclosingMethod
--dontwarn com.unity3d.**
--keep class com.unity3d.ads.** { *; }
--keep class com.unity3d.services.** { *; }

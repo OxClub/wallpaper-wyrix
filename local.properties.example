@@ -3,6 +3,3 @@ sdk.dir=/path/to/your/Android/sdk
 pixabay.api.key=YOUR_PIXABAY_API_KEY_HERE
 # Optional: free key from https://www.pexels.com/api/  (leave empty to skip Pexels)
 pexels.api.key=
-# Unity Ads (Unity Dashboard -> Monetization). Leave game id empty to disable ads.
-unity.game.id=800452515
-unity.banner.id=BP_Banner_Android

@@ -3,6 +3,7 @@ package com.wyrix.wallpaper.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.util.DisplayMetrics
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -13,12 +14,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.gson.Gson
-import com.unity3d.services.banners.BannerErrorInfo
-import com.unity3d.services.banners.BannerView
-import com.unity3d.services.banners.UnityBannerSize
 import com.wyrix.wallpaper.BuildConfig
-import com.wyrix.wallpaper.ads.UnityAdsManager
 import com.wyrix.wallpaper.R
 import com.wyrix.wallpaper.data.FavoritesStore
 import com.wyrix.wallpaper.databinding.ActivityMainBinding
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var wallpaperAdapter: WallpaperAdapter
     private lateinit var categoryAdapter: CategoryAdapter
-    private var bannerView: BannerView? = null
+    private var adView: AdView? = null
     private val gson = Gson()
 
     private val loadedItems = mutableListOf<WallpaperItem>()
@@ -68,48 +68,49 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Unity banner (320x50) at the bottom of the main screen. Debug builds run in Unity test
-     * mode (see UnityAdsManager). The container stays empty if the ad fails to load.
+     * Large anchored adaptive banner, anchored to the bottom of the main screen.
+     * Debug builds use Google's public test ad unit ID; release builds use the
+     * real one, so ads are never live during development/testing.
      */
     private fun setupBannerAd() {
-        if (!UnityAdsManager.isEnabled) return
-        val banner = BannerView(this, BuildConfig.UNITY_BANNER_ID, UnityBannerSize(320, 50))
-        banner.listener = object : BannerView.IListener {
-            override fun onBannerLoaded(bannerAdView: BannerView?) {
-                binding.adContainer.removeAllViews()
-                binding.adContainer.addView(banner)
-            }
-
-            override fun onBannerShown(bannerAdView: BannerView?) {}
-            override fun onBannerClick(bannerAdView: BannerView?) {}
-            override fun onBannerFailedToLoad(bannerAdView: BannerView?, errorInfo: BannerErrorInfo?) {}
-            override fun onBannerLeftApplication(bannerAdView: BannerView?) {}
+        val bannerAdUnitId = if (BuildConfig.DEBUG) {
+            BuildConfig.BANNER_AD_UNIT_ID_TEST
+        } else {
+            BuildConfig.BANNER_AD_UNIT_ID_RELEASE
         }
-        bannerView = banner
-        loadBannerWhenReady(banner, 0)
+
+        val view = AdView(this)
+        view.adUnitId = bannerAdUnitId
+        view.setAdSize(getAdaptiveBannerAdSize())
+        adView = view
+
+        binding.adContainer.removeAllViews()
+        binding.adContainer.addView(view)
+        view.loadAd(AdRequest.Builder().build())
     }
 
-    /** The Unity SDK initialises asynchronously, so retry a few times until it is ready. */
-    private fun loadBannerWhenReady(banner: BannerView, attempt: Int) {
-        if (UnityAdsManager.isInitialized) {
-            banner.load()
-        } else if (attempt < 10) {
-            binding.adContainer.postDelayed({ loadBannerWhenReady(banner, attempt + 1) }, 1000)
-        }
+    private fun getAdaptiveBannerAdSize(): AdSize {
+        val displayMetrics: DisplayMetrics = resources.displayMetrics
+        val adWidthPixels = binding.adContainer.width.takeIf { it > 0 } ?: displayMetrics.widthPixels
+        val density = displayMetrics.density
+        val adWidth = (adWidthPixels / density).toInt()
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
     }
 
     override fun onPause() {
+        adView?.pause()
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
+        adView?.resume()
         // The user may have removed a favorite on the detail screen.
         if (isFavoritesScreen && !isLoading) reload()
     }
 
     override fun onDestroy() {
-        bannerView?.destroy()
+        adView?.destroy()
         super.onDestroy()
     }
 
