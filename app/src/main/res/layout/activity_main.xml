@@ -45,15 +45,14 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <TextView
-            android:id="@+id/pixabayCredit"
+            android:id="@+id/creditsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoLink="web"
             android:background="@color/color_surface"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:linksClickable="true"
-            android:padding="4dp"
-            android:text="@string/pixabay_credit"
+            android:padding="6dp"
             android:textColor="@color/color_text_secondary"
             android:textSize="11sp" />
 
@@ -77,6 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="24dp"
         android:text="@string/no_results"
         android:textColor="@color/color_text_secondary"
         android:visibility="gone" />

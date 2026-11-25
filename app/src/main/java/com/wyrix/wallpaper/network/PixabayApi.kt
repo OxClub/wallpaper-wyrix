@@ -10,12 +10,11 @@ interface PixabayApi {
     suspend fun searchImages(
         @Query("key") key: String,
         @Query("q") query: String,
-        @Query("image_type") imageType: String = "photo",
+        @Query("image_type") imageType: String = "all",
         @Query("orientation") orientation: String = "vertical",
-        @Query("category") category: String? = null,
-        @Query("min_width") minWidth: Int? = null,
-        @Query("min_height") minHeight: Int? = null,
-        @Query("per_page") perPage: Int = 200,
+        @Query("min_width") minWidth: Int? = 1000,
+        @Query("min_height") minHeight: Int? = 1500,
+        @Query("per_page") perPage: Int = 30,
         @Query("page") page: Int = 1,
         @Query("safesearch") safeSearch: Boolean = true,
         @Query("order") order: String = "popular"

@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.wyrix.wallpaper.databinding.ItemCategoryBinding
+import com.wyrix.wallpaper.network.Category
 
 class CategoryAdapter(
-    private val categories: List<String>,
-    private val onSelected: (String) -> Unit
+    private val categories: List<Category>,
+    private val onSelected: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.VH>() {
 
     private var selectedPosition = 0
@@ -22,16 +23,23 @@ class CategoryAdapter(
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         val chip: Chip = holder.binding.chip
-        val name = categories[position]
-        chip.text = name.replaceFirstChar { it.uppercase() }
+        val category = categories[position]
+        chip.text = category.label
         chip.isChecked = position == selectedPosition
         chip.setOnClickListener {
             val previous = selectedPosition
-            selectedPosition = position
-            notifyItemChanged(previous)
+            selectedPosition = holder.bindingAdapterPosition
+            if (previous >= 0) notifyItemChanged(previous)
             notifyItemChanged(selectedPosition)
-            onSelected(name)
+            onSelected(category)
         }
+    }
+
+    /** Used while a text search is active: no category chip is highlighted. */
+    fun clearSelection() {
+        val previous = selectedPosition
+        selectedPosition = -1
+        if (previous >= 0) notifyItemChanged(previous)
     }
 
     override fun getItemCount() = categories.size
