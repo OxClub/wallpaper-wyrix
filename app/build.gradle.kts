@@ -26,8 +26,8 @@ android {
         applicationId = "com.wyrix.wallpaper"
         minSdk = 26
         targetSdk = 36
-        versionCode = 6
-        versionName = "1.1.0"
+        versionCode = 7
+        versionName = "1.1.1"
 
         buildConfigField("String", "PIXABAY_API_KEY", "\"$pixabayApiKey\"")
         buildConfigField("String", "PEXELS_API_KEY", "\"$pexelsApiKey\"")
